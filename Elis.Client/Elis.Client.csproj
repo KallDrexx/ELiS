@@ -40,15 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\InvalidLicenseXmlException.cs" />
+    <Compile Include="Exceptions\LicenseSignatureMismatchException.cs" />
+    <Compile Include="Exceptions\LicenseSignatureMissingException.cs" />
     <Compile Include="Generation\LicenseGenerator.cs" />
     <Compile Include="LicenseDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="SerializableVersion.cs" />
+    <Compile Include="Validation\LicenseValidator.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
