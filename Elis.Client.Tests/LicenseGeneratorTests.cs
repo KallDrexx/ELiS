@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Security.Cryptography.Xml;
+using System.Xml;
 using System.Xml.Serialization;
 using Elis.Client.Generation;
 using NUnit.Framework;
@@ -54,6 +56,25 @@ namespace Elis.Client.Tests
                 verificationLicense = (LicenseDetails) deserializer.Deserialize(reader);
 
             Assert.IsTrue(testLicense.Equals(verificationLicense), "Licenses were not equal");
+        }
+
+        [Test]
+        public void GeneratedXmlIsCorrectlySigned()
+        {
+            var key = new RSACryptoServiceProvider();
+            var generator = new LicenseGenerator(key);
+
+            var rawXml = generator.GenerateSignedXml(new LicenseDetails());
+
+            var doc = new XmlDocument();
+            TextReader reader = new StringReader(rawXml);
+            doc.Load(reader);
+
+            var signedXml = new SignedXml(doc);
+            var nodeList = doc.GetElementsByTagName("Signature");
+            signedXml.LoadXml((XmlElement)nodeList[0]);
+            var result = signedXml.CheckSignature(key);
+            Assert.IsTrue(result, "Verification of xml signature failed");
         }
     }
 }
