@@ -85,7 +85,7 @@ namespace Elis.Client.Tests
                 MinVersion = new SerializableVersion(1, 2, 3, 4),
                 MaxVersion = new SerializableVersion(2, 3, 4, 5),
                 LicenseKey = "1234",
-                LicensedTo = "me",
+                LicensedUserName = "me",
                 CustomValues = new SerializableDictionary<string, string>
                 {
                     {"key1", "val1"},

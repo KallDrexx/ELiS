@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Elis.Client
 {
@@ -10,44 +9,47 @@ namespace Elis.Client
         public string Application { get; set; }
         public SerializableVersion MinVersion { get; set; }
         public SerializableVersion MaxVersion { get; set; }
-        public string LicensedTo { get; set; }
+        public string LicensedUserName { get; set; }
+        public string LicensedUserEmail { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public SerializableDictionary<string, string> CustomValues { get; set; }
 
         public override bool Equals(object obj)
         {
-            var license = obj as LicenseDetails;
-            if (license == null)
+            if (ReferenceEquals(null, obj))
                 return false;
-
-            var propertysEqual = LicenseKey == license.LicenseKey &&
-                                 Application == license.Application &&
-                                 MinVersion == license.MinVersion &&
-                                 MaxVersion == license.MaxVersion &&
-                                 LicensedTo == license.LicensedTo &&
-                                 StartDate == license.StartDate &&
-                                 EndDate == license.EndDate;
-
-            if (!propertysEqual)
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
                 return false;
+            return Equals((LicenseDetails) obj);
+        }
 
-            // Compare the dictionaries
-            foreach (var key in CustomValues.Keys )
+        private bool Equals(LicenseDetails other)
+        {
+            return string.Equals(LicenseKey, other.LicenseKey) && string.Equals(Application, other.Application) &&
+                   Equals(MinVersion, other.MinVersion) && Equals(MaxVersion, other.MaxVersion) &&
+                   string.Equals(LicensedUserName, other.LicensedUserName) &&
+                   string.Equals(LicensedUserEmail, other.LicensedUserEmail) && StartDate.Equals(other.StartDate) &&
+                   EndDate.Equals(other.EndDate) && Equals(CustomValues, other.CustomValues);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
             {
-                if (!license.CustomValues.ContainsKey(key))
-                    return false;
-
-                if (!license.CustomValues[key].Equals(CustomValues[key]))
-                    return false;
+                int hashCode = (LicenseKey != null ? LicenseKey.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Application != null ? Application.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (MinVersion != null ? MinVersion.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (MaxVersion != null ? MaxVersion.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (LicensedUserName != null ? LicensedUserName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (LicensedUserEmail != null ? LicensedUserEmail.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ StartDate.GetHashCode();
+                hashCode = (hashCode * 397) ^ EndDate.GetHashCode();
+                hashCode = (hashCode * 397) ^ (CustomValues != null ? CustomValues.GetHashCode() : 0);
+                return hashCode;
             }
-
-            // Make sure the 2nd dictionary doesn't have any keys this license doesn't
-            if (license.CustomValues.Keys.Any(x => !CustomValues.Keys.Contains(x)))
-                return false;
-
-            // All checks passed
-            return true;
         }
     }
 }

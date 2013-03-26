@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
@@ -21,17 +22,17 @@ namespace Elis.Client
         /// <summary>
         /// The default XML tag name for an item.
         /// </summary>
-        private const string DEFAULTITEMTAG = "item";
+        private const string Defaultitemtag = "item";
 
         /// <summary>
         /// The default XML tag name for a key.
         /// </summary>
-        private const string DEFAULTKEYTAG = "key";
+        private const string Defaultkeytag = "key";
 
         /// <summary>
         /// The default XML tag name for a value.
         /// </summary>
-        private const string DEFAULTVALUETAG = "value";
+        private const string Defaultvaluetag = "value";
 
         /// <summary>
         /// The XML serializer for the key type.
@@ -81,7 +82,7 @@ namespace Elis.Client
         {
             get
             {
-                return DEFAULTITEMTAG;
+                return Defaultitemtag;
             }
         }
 
@@ -92,7 +93,7 @@ namespace Elis.Client
         {
             get
             {
-                return DEFAULTKEYTAG;
+                return Defaultkeytag;
             }
         }
 
@@ -103,7 +104,7 @@ namespace Elis.Client
         {
             get
             {
-                return DEFAULTVALUETAG;
+                return Defaultvaluetag;
             }
         }
 
@@ -213,6 +214,32 @@ namespace Elis.Client
                     writer.WriteEndElement();
                 }
             }
+        }
+
+        protected bool Equals(SerializableDictionary<TKey, TValue> other)
+        {
+            foreach (var key in Keys)
+            {
+                if (!other.ContainsKey(key))
+                    return false;
+
+                if (!this[key].Equals(other[key]))
+                    return false;
+            }
+
+            // make sure the other dictionary does not contain keys this dictionary doesn't have
+            return other.Keys.All(x => Keys.Contains(x));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != this.GetType())
+                return false;
+            return Equals((SerializableDictionary<TKey, TValue>) obj);
         }
     }
 }

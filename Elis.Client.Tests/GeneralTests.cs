@@ -15,6 +15,16 @@ namespace Elis.Client.Tests
             Assert.IsTrue(lic1.Equals(lic2), "Licenses were not equal");
         }
 
+        [Test]
+        public void TwoLicensesWithDifferentDictionaryValuesAreNotEqual()
+        {
+            var lic1 = CreateLicenseDetail();
+            var lic2 = CreateLicenseDetail();
+            lic2.CustomValues["key2"] = "val3";
+
+            Assert.IsFalse(lic1.Equals(lic2), "Licenses were incorrectly marked as equal");
+        }
+
         private LicenseDetails CreateLicenseDetail()
         {
             return new LicenseDetails
@@ -25,7 +35,7 @@ namespace Elis.Client.Tests
                 MinVersion = new SerializableVersion(1, 2, 3, 4),
                 MaxVersion = new SerializableVersion(2, 3, 4, 5),
                 LicenseKey = "1234",
-                LicensedTo = "me",
+                LicensedUserName = "me",
                 CustomValues = new SerializableDictionary<string, string>
                 {
                     {"key1", "val1"},

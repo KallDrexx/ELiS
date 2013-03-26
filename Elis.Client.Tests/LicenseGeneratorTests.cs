@@ -34,7 +34,7 @@ namespace Elis.Client.Tests
                 Application = "Test App",
                 MinVersion = new SerializableVersion(1, 2, 3, 4),
                 MaxVersion = new SerializableVersion(5, 6, 7, 8),
-                LicensedTo = "me",
+                LicensedUserName = "me",
                 LicenseKey = "1234",
                 CustomValues = new SerializableDictionary<string, string>
                 {
